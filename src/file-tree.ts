@@ -19,18 +19,12 @@ class FileItem extends vscode.TreeItem {
 }
 
 export class PPMTreeDataProvider implements vscode.TreeDataProvider<FileItem> {
-    private readonly listeners = new Set<(e: FileItem) => void>();
+    private _onDidChangeTreeData = new vscode.EventEmitter<
+        FileItem | undefined
+    >();
+    readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     constructor(private workspaceRoot?: string) {}
-
-    onDidChangeTreeData(
-        listener: (e: void | FileItem | null | undefined) => any,
-    ): vscode.Disposable {
-        this.listeners.add(listener);
-        return new vscode.Disposable(() => {
-            this.listeners.delete(listener);
-        });
-    }
 
     getTreeItem(
         element: FileItem,
@@ -54,6 +48,10 @@ export class PPMTreeDataProvider implements vscode.TreeDataProvider<FileItem> {
         }
         // Folder
         return fileItemsForDirectory(element.path);
+    }
+
+    refresh(): void {
+        this._onDidChangeTreeData.fire(undefined);
     }
 }
 
