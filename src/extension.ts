@@ -1,12 +1,19 @@
 import * as vscode from "vscode";
 import { PPMTreeDataProvider } from "./file-tree";
 import { PPMDecorator } from "./highlight";
+import {PPMCoverageCollecter} from './coverage';
 
 /**
  * Called by VSCode when the extension is first activated
  */
 export function activate(context: vscode.ExtensionContext) {
     console.log('PPM activated');
+
+    const root = vscode.workspace.rootPath;
+    if (!root) {
+        vscode.window.showErrorMessage(`No workspace is open`);
+        return;
+    }
 
     context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -15,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.setStatusBarMessage("Starting PPM...", 4_000);
             vscode.window.createTreeView("ppm-explorer", {
                 treeDataProvider: new PPMTreeDataProvider(
-                    vscode.workspace.rootPath,
+                    root,
                 ),
             });
         },
@@ -28,6 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
         null,
         context.subscriptions,
     );
+
+    const converage = new PPMCoverageCollecter(root);
+    converage.start();
 }
 
 // this method is called when your extension is deactivated
