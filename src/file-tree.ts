@@ -64,19 +64,19 @@ async function fileItemsForDirectory(directory: string) {
     });
 
     return dir.flatMap((entry) => {
-        let folderOrFile: 'folder' | 'file' | null = null;
+        let folderOrFile: "folder" | "file" | null = null;
 
         if (entry.isFile()) {
-            folderOrFile = 'file' as const;
+            folderOrFile = "file" as const;
         } else if (entry.isDirectory()) {
-            folderOrFile = 'folder' as const;
+            folderOrFile = "folder" as const;
         }
 
         if (folderOrFile) {
             return new FileItem(
                 entry.name,
                 path.join(directory, entry.name),
-                folderOrFile
+                folderOrFile,
             );
         }
 
