@@ -19,7 +19,15 @@
                 "command": "extension.helloWorld",
                 "title": "Hello World"
             }
-        ]
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "ppm-explorer",
+                    "name": "PPM File Explorer"
+                }
+            ]
+        }
     },
     "main": "./out/extension.js",
     "repository": {

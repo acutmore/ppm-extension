@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { PPMTreeDataProvider } from './file-tree';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -16,6 +17,9 @@ export function activate(context: vscode.ExtensionContext) {
 
         // Display a message box to the user
         vscode.window.showInformationMessage('Hello World!');
+        vscode.window.createTreeView('ppm-explorer', {
+            treeDataProvider: new PPMTreeDataProvider(vscode.workspace.rootPath)
+          });
     });
 
     context.subscriptions.push(disposable);
