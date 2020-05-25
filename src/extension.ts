@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { PPMTreeDataProvider } from "./file-tree";
+import { PPMDecorator } from "./highlight";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -30,6 +31,14 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(disposable);
+
+    const decorator = new PPMDecorator();
+    decorator.updateDecorations(vscode.window.activeTextEditor);
+    vscode.window.onDidChangeActiveTextEditor(
+        (editor) => decorator.updateDecorations(editor),
+        null,
+        context.subscriptions,
+    );
 }
 
 // this method is called when your extension is deactivated
