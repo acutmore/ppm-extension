@@ -11,13 +11,13 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.helloWorld"
+        "onCommand:extension.ppm"
     ],
     "contributes": {
         "commands": [
             {
-                "command": "extension.helloWorld",
-                "title": "Hello World"
+                "command": "extension.ppm",
+                "title": "PPM - see live code coverage"
             }
         ],
         "views": {
