@@ -14,7 +14,8 @@ class FileItem extends vscode.TreeItem {
                 ? vscode.TreeItemCollapsibleState.None
                 : vscode.TreeItemCollapsibleState.Collapsed,
         );
-        this.resourceUri 
+        const level = Math.random() * 100;
+        this.label = progressBar(level) + " " + label;
     }
 }
 
@@ -80,4 +81,15 @@ async function fileItemsForDirectory(directory: string) {
 
         return [];
     });
+}
+
+function progressBar(p: number): string {
+    const bar = `⣿⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀`.split("");
+    const fill = bar.shift()!;
+
+    for (let i = 10; i <= Math.min(p, 100); i += 10) {
+        bar[i / 10 - 1] = fill;
+    }
+
+    return bar.join("");
 }
