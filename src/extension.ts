@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { PPMTreeDataProvider } from "./file-tree";
 import { PPMDecorator } from "./highlight";
 import { PPMCoverageCollecter } from "./coverage";
-import { inspect } from "util";
+import * as URL from "url";
 
 /**
  * Called by VSCode when the extension is first activated
@@ -41,12 +41,29 @@ export function activate(context: vscode.ExtensionContext) {
     async function startCollecting() {
         try {
             await converage.start();
-            for (let i = 0; i < 100; i++) {
+
+            // Ignore page load coverage
+            await converage.collectCoverage();
+            decorator.clear();
+
+            for (let i = 0; i < 1000; i++) {
                 const report = await converage.collectCoverage();
-                console.log(inspect(report, false, 100, true));
-                await new Promise((resolve) => setTimeout(resolve, 5_000));
+                if (report.result.length === 0) {
+                    decorator.loadDecorations('', []);
+                }
+                for (const page of report.result) {
+                    const path = URL.parse(page.url).pathname;
+                    if (!path) {
+                        continue;
+                    }
+                    const ranges = page.functions.flatMap((fn) => fn.ranges);
+                    decorator.loadDecorations(path, ranges);
+                }
+                // Wait before collecting coverage again
+                await new Promise((resolve) => setTimeout(resolve, 100));
             }
         } finally {
+            decorator.clear();
             await converage.destroy();
         }
     }
